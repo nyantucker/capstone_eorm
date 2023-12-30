@@ -27,6 +27,16 @@ export const saveImgUser = async (req, res) => {
         let { img_id } = req.params
         let { token } = req.headers;
         let accessToken = decodeToken(token);
+        let checkSaved = await model.luu_anh.findOne({
+            where: {
+                nguoi_dung_id: accessToken.data.nguoi_dung_id,
+                hinh_id: img_id
+            }
+        })
+        if (checkSaved) {
+            responseData(res, "Lỗi đã tồn tại ảnh lưu","", 400);
+            return
+        }
         let newData = {
             nguoi_dung_id: accessToken.data.nguoi_dung_id,
             hinh_id: img_id,
